@@ -1,24 +1,16 @@
-# Use the official Golang base image with Ubuntu
-FROM golang:latest
+FROM jetpackio/devbox:latest
 
-# Set the working directory inside the container
-WORKDIR /app
+# Installing your devbox project
+WORKDIR /code
+USER root:root
+RUN mkdir -p /code && chown ${DEVBOX_USER}:${DEVBOX_USER} /code
+USER ${DEVBOX_USER}:${DEVBOX_USER}
 
-# Copy go.mod and go.sum to download dependencies
-COPY go.mod .
-COPY go.sum .
+COPY --chown=${DEVBOX_USER}:${DEVBOX_USER} . . 
+RUN devbox install
 
-# Download dependencies
-RUN go mod download
+RUN echo 'No install script found, skipping'
 
-# Copy the source code into the container
-COPY . .
+RUN devbox run build
 
-# Build the Go application
-RUN go build -o main .
-
-# Expose the port the application runs on
-EXPOSE 8080
-
-# Command to run the executable
-CMD ["./main"]
+CMD ["devbox", "run", "start"]

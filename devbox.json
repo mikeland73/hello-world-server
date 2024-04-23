@@ -1,13 +1,12 @@
 {
-  "packages": ["go"],
+  "packages": ["go@latest"],
   "shell": {
     "init_hook": [
-      "echo 'Welcome to devbox!' > /dev/null"
+      "echo 'Welcome to devbox!' > /dev/null",
     ],
     "scripts": {
-      "test": [
-        "echo \"Error: no test specified\" && exit 1"
-      ]
-    }
-  }
+      "build": "go build -o dist/main .",
+      "start": "./dist/main",
+    },
+  },
 }
